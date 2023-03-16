@@ -42,7 +42,7 @@ import tflite_runtime.interpreter as tflite
 
 
 # Load the TFLite model and allocate tensors.
-interpreter = tflite.Interpreter(model_path="model.tflite")
+interpreter = tflite.Interpreter(model_path="model_edgetpu.tflite")
 interpreter.allocate_tensors()
 
 # Get input and output tensors.

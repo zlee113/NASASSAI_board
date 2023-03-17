@@ -1,5 +1,5 @@
 # import tensorflow_io as tfio
-import tensorflow as tf
+#import tensorflow as tf
 # from tensorflow import keras
 # #from tensorflow.keras import layers
 # #import matplotlib.pyplot as plt
@@ -9,7 +9,7 @@ import numpy as np
 # from scipy import signal
 # from scipy.io.wavfile import read
 # #import random
-#import tflite_runtime.interpreter as tflite
+import tflite_runtime.interpreter as tflite
 from scipy import signal
 from scipy.io.wavfile import read
 
@@ -48,7 +48,7 @@ def model_run(filename):
     sample_rate, samples = read(filename)
     frequencies, times, spectrogram = signal.spectrogram(samples[:191786], sample_rate, noverlap=0)
     # Load the TFLite model and allocate tensors.
-    interpreter = tf.lite.Interpreter(model_path="model_v2_edgetpu.tflite")
+    interpreter = tflite.Interpreter(model_path="model_v2_edgetpu.tflite")
     interpreter.allocate_tensors()
 
     # Get input and output tensors.

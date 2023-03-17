@@ -42,7 +42,7 @@ import tflite_runtime.interpreter as tflite
 
 
 # Load the TFLite model and allocate tensors.
-interpreter = tflite.Interpreter(model_path="model_edgetpu.tflite")
+interpreter = tflite.Interpreter(model_path="model_v2_edgetpu.tflite")
 interpreter.allocate_tensors()
 
 # Get input and output tensors.
@@ -59,7 +59,7 @@ interpreter.invoke()
 # The function `get_tensor()` returns a copy of the tensor data.
 # Use `tensor()` in order to get a pointer to the tensor.
 output_data = interpreter.get_tensor(output_details[0]['index'])
-print(output_data)
+print("Whistler Inference:", output_data[0][0])
 #quit()
 
 # class TestModel(tf.Module):

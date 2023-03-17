@@ -2,7 +2,7 @@
 #import tensorflow as tf
 # from tensorflow import keras
 # #from tensorflow.keras import layers
-import matplotlib.pyplot as plt
+# #import matplotlib.pyplot as plt
 # #import pathlib
 # import os
 import numpy as np
@@ -47,10 +47,10 @@ def model_run(filename):
     # create spectrogram from wav file
     sample_rate, samples = read(filename)
     frequencies, times, spectrogram = signal.spectrogram(samples[:191786], sample_rate, noverlap=0)
-    plt.pcolormesh(times, frequencies, spectrogram, shading='gouraud')
-    plt.ylabel('Frequency [Hz]')
-    plt.xlabel('Time [sec]')
-    plt.show()
+    # plt.pcolormesh(t, f, Sxx, shading='gouraud')
+    # plt.ylabel('Frequency [Hz]')
+    # plt.xlabel('Time [sec]')
+    # plt.show()
     # Load the TFLite model and allocate tensors.
     interpreter = tflite.Interpreter(model_path="model_v2_edgetpu.tflite")
     interpreter.allocate_tensors()
@@ -74,7 +74,7 @@ def model_run(filename):
 print("Run with whistler:")
 model_run("whistler0.wav")
 print("Run with background noise:")
-model_run("tmp/out/out1.wav")
+model_run("whistler.wav")
 
 
 

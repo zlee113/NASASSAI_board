@@ -70,7 +70,7 @@ def model_run(filename):
 print("Run with whistler:")
 model_run("whistler0.wav")
 print("Run with background noise:")
-model_run("whistler0.wav")
+model_run("tmp/out/out1.wav")
 
 
 

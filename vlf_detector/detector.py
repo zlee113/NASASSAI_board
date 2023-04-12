@@ -1,5 +1,5 @@
 import numpy as np
-#import tflite_runtime.interpreter as tflite
+import tflite_runtime.interpreter as tflite
 from scipy import signal
 from scipy.io.wavfile import read
 from multiprocessing import Process

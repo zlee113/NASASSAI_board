@@ -22,11 +22,14 @@ class Detector:
         self.station = stations[station]
 
     def run(self):
-        while(True):
-            self.generate_wav_files("buffer")
-            p = Process(target=self.process_output)
-            p.start()
-            p.join()
+        try:
+            while(True):
+                self.generate_wav_files("buffer")
+                p = Process(target=self.process_output)
+                p.start()
+                p.join()
+        except KeyboardInterrupt:
+            pass
 
     
     def generate_wav_files(self,dir):

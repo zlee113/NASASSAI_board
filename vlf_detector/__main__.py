@@ -11,12 +11,12 @@ def parse_cli():
     parser.prog = TITLE
     parser.add_argument("-m", "--model", type=str, default=MODEL_PATH, help="Model Name to use for interpreter")
     parser.add_argument("-s", "--station", type=str, default=STATION, help="Pick station to stream live data from")
-    parser.add_argument("-p", "--produce-output", type=bool, default=SPEC, help="Produce a spectrogram of the output signals")
+    #parser.add_argument("-p", "--produce-output", type=bool, default=SPEC, help="Produce a spectrogram of the output signals")
 
     args = parser.parse_args()
     return args
 
 if __name__ == "__main__":
     args = parse_cli()
-    detector = Detector(args.model, args.station, args.output)
+    detector = Detector(args.model, args.station)
     detector.run()

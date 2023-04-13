@@ -79,7 +79,7 @@ class Detector:
         spec_v, spec_h = np.shape(spectrogram)
         size = np.zeros([input_shape[1], input_shape[2] - spec_h])
         print(np.shape(size))
-        spec = np.hstack((spectrogram, size))
+        spec = np.hstack((spectrogram, size), dtype=np.float32)
         #input_data = np.array(np.zeros(input_shape), dtype=np.float32)
         #np.copyto(input_data, spectrogram)
         print(np.shape(spectrogram))

@@ -75,7 +75,7 @@ class Detector:
 
         # Test the model on input data and make sure its the right size
         input_shape = input_details[0]['shape']
-        input_data = np.array(np.zeros(input_shape), dtype=np.float)
+        input_data = np.array(np.zeros(input_shape), dtype=np.float32)
         np.copyto(input_data, spectrogram)
         self.interpreter.set_tensor(input_details[0]['index'], input_data)
 

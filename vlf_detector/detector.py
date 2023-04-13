@@ -35,10 +35,10 @@ class Detector:
     def generate_wav_files(self,dir):
         cmd = "vtvorbis -E 20 -dn" + self.station + " | vtraw -ow > ./tmp/vlfex.wav"
         os.system(cmd)
-        seg1 = 'ffmpeg -ss 0 -t 6 -i ./tmp/vlfex.wav ./tmp/out/out1.wav'
-        seg2 = 'ffmpeg -ss 4.5 -t 6 -i ./tmp/vlfex.wav ./tmp/out/out2.wav'
-        seg3 = 'ffmpeg -ss 9 -t 6 -i ./tmp/vlfex.wav ./tmp/out/out3.wav'
-        seg4 = 'ffmpeg -ss 14 -t 6 -i ./tmp/vlfex.wav ./tmp/out/out4.wav'
+        seg1 = 'ffmpeg -y -ss 0 -t 6 -i ./tmp/vlfex.wav ./tmp/out/out1.wav'
+        seg2 = 'ffmpeg -y -ss 4.5 -t 6 -i ./tmp/vlfex.wav ./tmp/out/out2.wav'
+        seg3 = 'ffmpeg -y -ss 9 -t 6 -i ./tmp/vlfex.wav ./tmp/out/out3.wav'
+        seg4 = 'ffmpeg -y -ss 14 -t 6 -i ./tmp/vlfex.wav ./tmp/out/out4.wav'
 
         os.system(seg1)
         os.system(seg2)
@@ -53,7 +53,14 @@ class Detector:
         values.append(self.model_run("./tmp/out/out4.wav"))
         for i in values:
             if i > 0.75:
-                os.system("mv ./tmp/out/vlfex.wav ./tmp/buffer/whistler" + datetime.now())
+                os.system("mv ./tmp/out/vlfex.wav ./buffer/whistler" + datetime.now())
+
+        # # Remove Outputs
+        # os.system("rm ./tmp/out/out1.wav")
+        # os.system("rm ./tmp/out/out2.wav")
+        # os.system("rm ./tmp/out/out3.wav")
+        # os.system("rm ./tmp/out/out4.wav")
+        # os.system("rm ./tmp/vlfex.wav")
 
     def model_run(self, filename):
         # create spectrogram from wav file
@@ -66,8 +73,11 @@ class Detector:
         input_details = self.interpreter.get_input_details()
         output_details = self.interpreter.get_output_details()
 
-        # Test the model on random input data.
-        self.interpreter.set_tensor(input_details[0]['index'], [spectrogram])
+        # Test the model on input data and make sure its the right size
+        input_shape = input_details[0]['shape']
+        input_data = np.array(np.zeros(input_shape), dtype=np.float)
+        np.copyto(input_data, spectrogram)
+        self.interpreter.set_tensor(input_details[0]['index'], input_data)
 
         self.interpreter.invoke()
 

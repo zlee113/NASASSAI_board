@@ -75,11 +75,11 @@ class Detector:
 
         # Test the model on input data and make sure its the right size
         input_shape = input_details[0]['shape']
-        spectrogram = np.array(spectrogram)
+        spectrogram = np.array(spectrogram, dtype=np.float32)
         spec_v, spec_h = np.shape(spectrogram)
         size = np.zeros([input_shape[1], input_shape[2] - spec_h])
         print(np.shape(size))
-        spec = np.hstack((spectrogram, size), dtype=np.float32)
+        spec = np.hstack((spectrogram, size))
         #input_data = np.array(np.zeros(input_shape), dtype=np.float32)
         #np.copyto(input_data, spectrogram)
         print(np.shape(spectrogram))

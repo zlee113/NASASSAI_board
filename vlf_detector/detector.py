@@ -75,6 +75,7 @@ class Detector:
 
         # Test the model on input data and make sure its the right size
         input_shape = input_details[0]['shape']
+        print(spectrogram, len(spectrogram))
         np.array(spectrogram)
         spec_shape = spectrogram.shape()
         print(input_shape, spec_shape)

@@ -9,7 +9,7 @@ import time
 
 class Detector:
 
-    def __init__(self, model: str, station: str, output: bool, duration: int, split: int):
+    def __init__(self, model: str, station: str, output: bool, duration: float, split: int):
 
         self.interpreter = tflite.Interpreter(model_path="./" + model)
         stations = {"Todmorden": "5.9.106.210,4401", 
@@ -36,12 +36,12 @@ class Detector:
             pass
 
     def generate_wav_files(self,dir):
-        cmd = "vtvorbis -E " + self.duration + " -dn" + self.station + " | vtraw -ow > ./tmp/vlfex.wav"
+        cmd = "vtvorbis -E " + str(self.duration) + " -dn" + self.station + " | vtraw -ow > ./tmp/vlfex.wav"
         os.system(cmd)
         seg1 = 'ffmpeg -y -ss 0 -t 6 -i ./tmp/vlfex.wav ./tmp/out/out1.wav'
         seg2 = 'ffmpeg -y -ss 4.5 -t 6 -i ./tmp/vlfex.wav ./tmp/out/out2.wav'
         seg3 = 'ffmpeg -y -ss 9 -t 6 -i ./tmp/vlfex.wav ./tmp/out/out3.wav'
-        seg4 = 'ffmpeg -y -ss 14 -t 6 -i ./tmp/vlfex.wav ./tmp/out/out4.wav'
+        seg4 = 'ffmpeg -y -ss 13.97 -t 6 -i ./tmp/vlfex.wav ./tmp/out/out4.wav'
 
         os.system(seg1)
         os.system(seg2)

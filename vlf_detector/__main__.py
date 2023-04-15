@@ -13,7 +13,7 @@ def parse_cli():
     parser.add_argument("-m", "--model", type=str, default=MODEL_PATH, help="Model Name to use for interpreter")
     parser.add_argument("-s", "--station", type=str, default=STATION, help="Pick station to stream live data from")
     parser.add_argument("-o", "--output", type=bool, default=SPEC, help="Produce a spectrogram of the output signals")
-    parser.add_argument("-d", "--duration", type=int, default=DURATION, help="Duration of wav files you want to look at")
+    parser.add_argument("-d", "--duration", type=float, default=DURATION, help="Duration of wav files you want to look at")
     parser.add_argument("-S", "--split", type=int, default=SPLIT, help="Amount of splits for the duration")
 
     args = parser.parse_args()

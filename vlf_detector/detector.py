@@ -2,9 +2,9 @@ import numpy as np
 import tflite_runtime.interpreter as tflite
 from scipy import signal
 from scipy.io.wavfile import read
-from multiprocessing import Process
+import multiprocessing as mp
 import os
-import datetime
+from datetime import datetime
 import time
 
 class Detector:
@@ -28,8 +28,9 @@ class Detector:
     def run(self):
         try:
             while(True):
+                print(mp.cpu_count())
                 self.generate_wav_files("buffer")
-                p = Process(target=self.process_output)
+                p = mp.Process(target=self.process_output)
                 p.start()
                 p.join()
         except KeyboardInterrupt:

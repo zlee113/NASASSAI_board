@@ -5,10 +5,11 @@ from scipy.io.wavfile import read
 from multiprocessing import Process
 import os
 import datetime
+import time
 
 class Detector:
 
-    def __init__(self, model: str, station: str ):
+    def __init__(self, model: str, station: str, output: bool, duration: int, split: int):
 
         self.interpreter = tflite.Interpreter(model_path="./" + model)
         stations = {"Todmorden": "5.9.106.210,4401", 
@@ -20,6 +21,9 @@ class Detector:
                     "Heidelberg": "5.9.106.210,4441"
                     }
         self.station = stations[station]
+        self.output = output
+        self.duration = duration
+        self.split = split
 
     def run(self):
         try:
@@ -31,9 +35,8 @@ class Detector:
         except KeyboardInterrupt:
             pass
 
-    
     def generate_wav_files(self,dir):
-        cmd = "vtvorbis -E 20 -dn" + self.station + " | vtraw -ow > ./tmp/vlfex.wav"
+        cmd = "vtvorbis -E " + self.duration + " -dn" + self.station + " | vtraw -ow > ./tmp/vlfex.wav"
         os.system(cmd)
         seg1 = 'ffmpeg -y -ss 0 -t 6 -i ./tmp/vlfex.wav ./tmp/out/out1.wav'
         seg2 = 'ffmpeg -y -ss 4.5 -t 6 -i ./tmp/vlfex.wav ./tmp/out/out2.wav'
@@ -46,6 +49,7 @@ class Detector:
         os.system(seg4)
 
     def process_output(self):
+        time.sleep(5)
         values = []
         values.append(self.model_run("./tmp/out/out1.wav"))
         values.append(self.model_run("./tmp/out/out2.wav"))
@@ -75,15 +79,15 @@ class Detector:
 
         # Test the model on input data and make sure its the right size
         input_shape = input_details[0]['shape']
-        spectrogram = np.array(spectrogram, dtype=np.float32)
-        spec_v, spec_h = np.shape(spectrogram)
-        size = np.zeros([input_shape[1], input_shape[2] - spec_h])
-        print(np.shape(size))
-        spec = np.hstack((spectrogram, size))
-        #input_data = np.array(np.zeros(input_shape), dtype=np.float32)
-        #np.copyto(input_data, spectrogram)
-        print(np.shape(spectrogram))
-        self.interpreter.set_tensor(input_details[0]['index'], [spec])
+        # spectrogram = np.array(spectrogram, dtype=np.float32)
+        # spec_v, spec_h = np.shape(spectrogram)
+        # size = np.zeros([input_shape[1], input_shape[2] - spec_h])
+        # print(np.shape(size))
+        # spec = np.hstack((spectrogram, size))
+        # #input_data = np.array(np.zeros(input_shape), dtype=np.float32)
+        # #np.copyto(input_data, spectrogram)
+        # print(np.shape(spectrogram))
+        self.interpreter.set_tensor(input_details[0]['index'], [spectrogram])
 
         self.interpreter.invoke()
 

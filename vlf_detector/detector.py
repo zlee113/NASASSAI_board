@@ -34,7 +34,7 @@ class Detector:
                 p.start()
                 p.join()
         except KeyboardInterrupt:
-            pass
+            SystemExit(1)
 
     def generate_wav_files(self,dir):
         cmd = "vtvorbis -E " + str(self.duration) + " -dn" + self.station + " | vtraw -ow > ./tmp/vlfex.wav"

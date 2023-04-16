@@ -57,10 +57,10 @@ class Detector:
 
     def process_output(self):
         values = []
-        values.append(self.model_run("./tmp/out/out1.wav"))
-        values.append(self.model_run("./tmp/out/out2.wav"))
-        values.append(self.model_run("./tmp/out/out3.wav"))
-        values.append(self.model_run("./tmp/out/out4.wav"))
+        values.append(self.model_run("./vlf_detector/tmp/out1.wav"))
+        values.append(self.model_run("./vlf_detector/tmp/out2.wav"))
+        values.append(self.model_run("./vlf_detector/tmp/out3.wav"))
+        values.append(self.model_run("./vlf_detector/tmp/out4.wav"))
         for i in values:
             if i > 0.75:
                 os.system("mv ./tmp/out/vlfex.wav ./buffer/whistler" + datetime.now())

@@ -24,8 +24,8 @@ class Detector:
         self.output = output
         self.duration = duration
         self.split = split
-        os.system("mkdir ./vlf_detector/tmp")
-        os.system("mkdir ./buffer")
+        os.system("mkdir -p ./vlf_detector/tmp")
+        os.system("mkdir -p ./buffer")
 
 
     def run(self):

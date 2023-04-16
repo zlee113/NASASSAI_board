@@ -31,7 +31,6 @@ class Detector:
     def run(self):
         try:
             while(True):
-                print(mp.cpu_count())
                 self.generate_wav_files("buffer")
                 start = time.time()
                 self.process_output()
@@ -44,7 +43,7 @@ class Detector:
             SystemExit(1)
 
     def generate_wav_files(self,dir):
-        cmd = "vtvorbis -E " + str(self.duration) + " -dn" + self.station + " | vtraw -ow > ./tmp/vlfex.wav"
+        cmd = "vtvorbis -E " + str(self.duration) + " -dn" + self.station + " | vtraw -ow > ./vlf_detector/tmp/vlfex.wav"
         os.system(cmd)
         seg1 = 'ffmpeg -y -ss 0 -t 6 -i ./vlf_detector/tmp/vlfex.wav ./tmp/out1.wav'
         seg2 = 'ffmpeg -y -ss 4.5 -t 6 -i ./vlf_detector/tmp/vlfex.wav ./tmp/out2.wav'

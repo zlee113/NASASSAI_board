@@ -24,25 +24,32 @@ class Detector:
         self.output = output
         self.duration = duration
         self.split = split
+        os.system("mkdir ./vlf_detector/tmp")
+        os.system("mkdir ./buffer")
+
 
     def run(self):
         try:
             while(True):
                 print(mp.cpu_count())
                 self.generate_wav_files("buffer")
-                p = mp.Process(target=self.process_output)
-                p.start()
-                p.join()
+                start = time.time()
+                self.process_output()
+                end = time.time()
+                print("Interpreter duration: " + (end-start))
+                # p = mp.Process(target=self.process_output)
+                # p.start()
+                # p.join()
         except KeyboardInterrupt:
             SystemExit(1)
 
     def generate_wav_files(self,dir):
         cmd = "vtvorbis -E " + str(self.duration) + " -dn" + self.station + " | vtraw -ow > ./tmp/vlfex.wav"
         os.system(cmd)
-        seg1 = 'ffmpeg -y -ss 0 -t 6 -i ./tmp/vlfex.wav ./tmp/out/out1.wav'
-        seg2 = 'ffmpeg -y -ss 4.5 -t 6 -i ./tmp/vlfex.wav ./tmp/out/out2.wav'
-        seg3 = 'ffmpeg -y -ss 9 -t 6 -i ./tmp/vlfex.wav ./tmp/out/out3.wav'
-        seg4 = 'ffmpeg -y -ss 13.97 -t 6 -i ./tmp/vlfex.wav ./tmp/out/out4.wav'
+        seg1 = 'ffmpeg -y -ss 0 -t 6 -i ./vlf_detector/tmp/vlfex.wav ./tmp/out1.wav'
+        seg2 = 'ffmpeg -y -ss 4.5 -t 6 -i ./vlf_detector/tmp/vlfex.wav ./tmp/out2.wav'
+        seg3 = 'ffmpeg -y -ss 9 -t 6 -i ./vlf_detector/tmp/vlfex.wav ./tmp/out3.wav'
+        seg4 = 'ffmpeg -y -ss 13.97 -t 6 -i ./vlf_detector/tmp/vlfex.wav ./tmp/out4.wav'
 
         os.system(seg1)
         os.system(seg2)
@@ -50,7 +57,6 @@ class Detector:
         os.system(seg4)
 
     def process_output(self):
-        time.sleep(5)
         values = []
         values.append(self.model_run("./tmp/out/out1.wav"))
         values.append(self.model_run("./tmp/out/out2.wav"))

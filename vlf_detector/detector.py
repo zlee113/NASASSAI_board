@@ -63,7 +63,7 @@ class Detector:
         values.append(self.model_run("./vlf_detector/tmp/out4.wav"))
         for i in values:
             if i > 0.75:
-                os.system("mv ./tmp/vlfex.wav ./buffer/whistler" + datetime.now())
+                os.system("mv ./tmp/vlfex.wav ./buffer/whistler" + str(datetime.now()))
 
         # # Remove Outputs
         # os.system("rm ./tmp/out/out1.wav")

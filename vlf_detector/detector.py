@@ -45,10 +45,10 @@ class Detector:
     def generate_wav_files(self,dir):
         cmd = "vtvorbis -E " + str(self.duration) + " -dn" + self.station + " | vtraw -ow > ./vlf_detector/tmp/vlfex.wav"
         os.system(cmd)
-        seg1 = 'ffmpeg -y -ss 0 -t 6 -i ./vlf_detector/tmp/vlfex.wav ./tmp/out1.wav'
-        seg2 = 'ffmpeg -y -ss 4.5 -t 6 -i ./vlf_detector/tmp/vlfex.wav ./tmp/out2.wav'
-        seg3 = 'ffmpeg -y -ss 9 -t 6 -i ./vlf_detector/tmp/vlfex.wav ./tmp/out3.wav'
-        seg4 = 'ffmpeg -y -ss 13.97 -t 6 -i ./vlf_detector/tmp/vlfex.wav ./tmp/out4.wav'
+        seg1 = 'ffmpeg -y -ss 0 -t 6 -i ./vlf_detector/tmp/vlfex.wav ./vlf_detector/tmp/out1.wav'
+        seg2 = 'ffmpeg -y -ss 4.5 -t 6 -i ./vlf_detector/tmp/vlfex.wav ./vlf_detector/tmp/out2.wav'
+        seg3 = 'ffmpeg -y -ss 9 -t 6 -i ./vlf_detector/tmp/vlfex.wav ./vlf_detector/tmp/out3.wav'
+        seg4 = 'ffmpeg -y -ss 13.97 -t 6 -i ./vlf_detector/tmp/vlfex.wav ./vlf_detector/tmp/out4.wav'
 
         os.system(seg1)
         os.system(seg2)
@@ -63,7 +63,7 @@ class Detector:
         values.append(self.model_run("./vlf_detector/tmp/out4.wav"))
         for i in values:
             if i > 0.75:
-                os.system("mv ./tmp/out/vlfex.wav ./buffer/whistler" + datetime.now())
+                os.system("mv ./tmp/vlfex.wav ./buffer/whistler" + datetime.now())
 
         # # Remove Outputs
         # os.system("rm ./tmp/out/out1.wav")

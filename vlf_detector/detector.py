@@ -56,15 +56,17 @@ class Detector:
         os.system(seg4)
 
     def process_output(self):
-        values = []
-        values.append(self.model_run("./vlf_detector/tmp/out1.wav"))
-        values.append(self.model_run("./vlf_detector/tmp/out2.wav"))
-        values.append(self.model_run("./vlf_detector/tmp/out3.wav"))
-        values.append(self.model_run("./vlf_detector/tmp/out4.wav"))
-        for i in values:
-            if i > 0.75:
-                os.system("mv ./tmp/vlfex.wav ./buffer/whistler" + str(datetime.now()))
-
+        # values = []
+        # values.append()
+        # values.append(self.model_run("./vlf_detector/tmp/out2.wav"))
+        # values.append(self.model_run("./vlf_detector/tmp/out3.wav"))
+        # values.append(self.model_run("./vlf_detector/tmp/out4.wav"))
+        for i in range(4):
+            val = self.model_run(f"./vlf_detector/tmp/out{i+1}.wav")
+            if val > 0.75:
+                mv_cmd = "mv ./vlf_detector/tmp/vlfex.wav ./buffer/whistler" + str(datetime.today())
+                os.system(mv_cmd)
+                break
         # # Remove Outputs
         # os.system("rm ./tmp/out/out1.wav")
         # os.system("rm ./tmp/out/out2.wav")

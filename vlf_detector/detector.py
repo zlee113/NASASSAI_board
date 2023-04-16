@@ -35,7 +35,7 @@ class Detector:
                 start = time.time()
                 self.process_output()
                 end = time.time()
-                print("Interpreter duration: " + (end-start))
+                print("Interpreter duration: " + str(end-start))
                 # p = mp.Process(target=self.process_output)
                 # p.start()
                 # p.join()

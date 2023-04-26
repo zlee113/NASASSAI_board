@@ -9,9 +9,12 @@ import time
 
 class Detector:
 
-    def __init__(self, model: str, station: str, output: bool, duration: float, split: int):
+    def __init__(self, model: str, station: str, duration: float, split: int):
 
+        # Creates an interpreter based on the model given
         self.interpreter = tflite.Interpreter(model_path="./" + model)
+
+        # Dictionary of all the stations found on vlfrx
         stations = {"Todmorden": "5.9.106.210,4401", 
                     "Cumiana": "5.9.106.210,4415", 
                     "Surfside Beach": "5.9.106.210,4434",
@@ -21,17 +24,18 @@ class Detector:
                     "Heidelberg": "5.9.106.210,4441"
                     }
         self.station = stations[station]
-        self.output = output
         self.duration = duration
         self.split = split
+
+        # Makes appropriate directories based off of usage in the code
         os.system("mkdir -p ./detector/tmp")
         os.system("mkdir -p ./buffer")
 
-
+    # Run function holds all the calls in an infinite loop to always be discovering whistlers
     def run(self):
         try:
             while(True):
-                self.generate_wav_files("buffer")
+                self.generate_wav_files()
                 start = time.time()
                 self.process_output()
                 end = time.time()
@@ -42,13 +46,16 @@ class Detector:
         except KeyboardInterrupt:
             SystemExit(1)
 
-    def generate_wav_files(self,dir):
+    def generate_wav_files(self):
+        # Vtvorbis command connects to station and records for a set duration
+        # Vtraw is used to save that recording as a wav file
         cmd = "vtvorbis -E " + str(self.duration) + " -dn" + self.station + " | vtraw -ow > ./detector/tmp/vlfex.wav"
         os.system(cmd)
-        seg1 = 'ffmpeg -y -ss 0 -t 6 -i ./detector/tmp/vlfex.wav ./detector/tmp/out1.wav'
-        seg2 = 'ffmpeg -y -ss 4.5 -t 6 -i ./detector/tmp/vlfex.wav ./detector/tmp/out2.wav'
-        seg3 = 'ffmpeg -y -ss 9 -t 6 -i ./detector/tmp/vlfex.wav ./detector/tmp/out3.wav'
-        seg4 = 'ffmpeg -y -ss 13.97 -t 6 -i ./detector/tmp/vlfex.wav ./detector/tmp/out4.wav'
+        # FFMPEG is used to split up that recording into separate files for model processing
+        seg1 = 'ffmpeg -y -ss 0 -t ' + str(self.split) + ' -i ./detector/tmp/vlfex.wav ./detector/tmp/out1.wav'
+        seg2 = 'ffmpeg -y -ss 4.5 -t ' + str(self.split) + ' -i ./detector/tmp/vlfex.wav ./detector/tmp/out2.wav'
+        seg3 = 'ffmpeg -y -ss 9 -t ' + str(self.split) + ' -i ./detector/tmp/vlfex.wav ./detector/tmp/out3.wav'
+        seg4 = 'ffmpeg -y -ss 13.97 -t ' + str(self.split) + ' -i ./detector/tmp/vlfex.wav ./detector/tmp/out4.wav'
 
         os.system(seg1)
         os.system(seg2)
@@ -56,23 +63,16 @@ class Detector:
         os.system(seg4)
 
     def process_output(self):
-        # values = []
-        # values.append()
-        # values.append(self.model_run("./vlf_detector/tmp/out2.wav"))
-        # values.append(self.model_run("./vlf_detector/tmp/out3.wav"))
-        # values.append(self.model_run("./vlf_detector/tmp/out4.wav"))
+
+        # Runs each iteration through model and ends if one contains a whistler
         for i in range(4):
             val = self.model_run(f"./detector/tmp/out{i+1}.wav")
             if val > 0.75:
-                mv_cmd = "mv ./detector/tmp/vlfex.wav ./buffer/whistler" + str(datetime.today())
+                now = datetime.now()
+                dt = now.strftime("%d%m%Y%H%M%S")
+                mv_cmd = "mv ./detector/tmp/vlfex.wav ./buffer/" + dt
                 os.system(mv_cmd)
                 break
-        # # Remove Outputs
-        # os.system("rm ./tmp/out/out1.wav")
-        # os.system("rm ./tmp/out/out2.wav")
-        # os.system("rm ./tmp/out/out3.wav")
-        # os.system("rm ./tmp/out/out4.wav")
-        # os.system("rm ./tmp/vlfex.wav")
 
     def model_run(self, filename):
         # create spectrogram from wav file

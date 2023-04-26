@@ -69,13 +69,13 @@ class Detector:
             val = self.model_run(f"./detector/tmp/out{i+1}.wav")
             if val > 0.75:
                 now = datetime.now()
-                dt = now.strftime("%d%m%Y%H%M%S")
+                dt = now.strftime("%d%m%Y%H%M%S.wav")
                 mv_cmd = "mv ./detector/tmp/vlfex.wav ./buffer/" + dt
                 os.system(mv_cmd)
                 break
 
     def model_run(self, filename):
-        # create spectrogram from wav file
+        # Create spectrogram from wav file
         sample_rate, samples = read(filename)
         frequencies, times, spectrogram = signal.spectrogram(samples[:191786], sample_rate, noverlap=0)
 
@@ -85,16 +85,7 @@ class Detector:
         input_details = self.interpreter.get_input_details()
         output_details = self.interpreter.get_output_details()
 
-        # Test the model on input data and make sure its the right size
-        input_shape = input_details[0]['shape']
-        # spectrogram = np.array(spectrogram, dtype=np.float32)
-        # spec_v, spec_h = np.shape(spectrogram)
-        # size = np.zeros([input_shape[1], input_shape[2] - spec_h])
-        # print(np.shape(size))
-        # spec = np.hstack((spectrogram, size))
-        # #input_data = np.array(np.zeros(input_shape), dtype=np.float32)
-        # #np.copyto(input_data, spectrogram)
-        # print(np.shape(spectrogram))
+        # Interpret based on filename passed through function
         self.interpreter.set_tensor(input_details[0]['index'], [spectrogram])
 
         self.interpreter.invoke()

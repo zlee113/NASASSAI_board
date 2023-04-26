@@ -5,7 +5,7 @@ MODEL_PATH = "model_v2_edgetpu.tflite"
 STATION = "Todmorden"
 SPEC = False
 DURATION = 20
-SPLIT = 4
+SPLIT = 6
 def parse_cli():
     """ Parses and validates command line arguments """
     parser = argparse.ArgumentParser()

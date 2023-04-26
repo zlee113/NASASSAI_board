@@ -12,14 +12,13 @@ def parse_cli():
     parser.prog = TITLE
     parser.add_argument("-m", "--model", type=str, default=MODEL_PATH, help="Model Name to use for interpreter")
     parser.add_argument("-s", "--station", type=str, default=STATION, help="Pick station to stream live data from")
-    parser.add_argument("-o", "--output", type=bool, default=SPEC, help="Produce a spectrogram of the output signals")
-    parser.add_argument("-d", "--duration", type=float, default=DURATION, help="Duration of wav files you want to look at")
-    parser.add_argument("-S", "--split", type=int, default=SPLIT, help="Amount of splits for the duration")
+    parser.add_argument("-d", "--duration", type=float, default=DURATION, help="Duration of wav files you want in buffer folder, default is 20 seconds")
+    parser.add_argument("-S", "--split", type=int, default=SPLIT, help="time of splits for model, default model is 6 second wav files")
 
     args = parser.parse_args()
     return args
 
 if __name__ == "__main__":
     args = parse_cli()
-    detector = Detector(args.model, args.station,args.output, args.duration, args.split)
+    detector = Detector(args.model, args.station, args.duration, args.split)
     detector.run()
